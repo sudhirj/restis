@@ -38,6 +38,19 @@ func (s *MemoryStore) Decrement(key string) int64 {
 	return s.transformNumber(key, func(n int64) int64 { return n - 1 })
 }
 
+func (s *MemoryStore) IncrementBy(key string, delta int64) int64 {
+	return s.transformNumber(key, func(n int64) int64 { return n + delta })
+}
+
+func (s *MemoryStore) DecrementBy(key string, delta int64) int64 {
+	return s.transformNumber(key, func(n int64) int64 { return n - delta })
+}
+
+func (s *MemoryStore) Exists(key string) bool {
+	_, exists := s.stringMap[key]
+	return exists
+}
+
 func (s *MemoryStore) transformNumber(key string, transform func(int64) int64) int64 {
 	n, err := strconv.ParseInt(s.stringMap[key], 10, 64)
 	if err != nil {
@@ -48,6 +61,7 @@ func (s *MemoryStore) transformNumber(key string, transform func(int64) int64) i
 	return n
 }
 
+// NewMemoryStore creates a new memory store with a string map
 func NewMemoryStore() Store {
 	return &MemoryStore{
 		stringMap: map[string]string{},

@@ -25,6 +25,11 @@ func StringOperations(t *testing.T, store Store) {
 	assert.Equal(t, 2, store.Decrement("n1"), "should decrement")
 	assert.Equal(t, 1, store.Decrement("n1"), "should decrement")
 	assert.Equal(t, "1", store.Get("n1"), "should have saved number in key")
+	assert.Equal(t, 5, store.IncrementBy("n1", 4), "should increment by a given number")
+	assert.Equal(t, 3, store.DecrementBy("n1", 2), "should increment by a given number")
+
+	assert.True(t, store.Exists("n1"), "exist should work")
+	assert.False(t, store.Exists("non existent key"), "exist should work")
 }
 
 func TestMemoryStore(t *testing.T) {

@@ -8,4 +8,7 @@ type Store interface {
 	MultiSet(map[string]string)
 	Increment(key string) int64
 	Decrement(key string) int64
+	IncrementBy(key string, delta int64) int64
+	DecrementBy(key string, delta int64) int64
+	Exists(key string) bool
 }
