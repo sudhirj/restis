@@ -16,6 +16,24 @@ func (s *MemoryStore) Set(key string, value string) {
 	s.stringMap[key] = value
 }
 
+func (s *MemoryStore) SetNX(key string, value string) bool {
+	alreadyExists := s.Exists(key)
+	if alreadyExists {
+		return false
+	}
+	s.Set(key, value)
+	return true
+}
+
+func (s *MemoryStore) SetEX(key string, value string) bool {
+	alreadyExists := s.Exists(key)
+	if alreadyExists {
+		s.Set(key, value)
+		return true
+	}
+	return false
+}
+
 func (s *MemoryStore) MultiGet(keys []string) map[string]string {
 	m := map[string]string{}
 	for _, k := range keys {

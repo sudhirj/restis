@@ -30,6 +30,19 @@ func StringOperations(t *testing.T, store Store) {
 
 	assert.True(t, store.Exists("n1"), "exist should work")
 	assert.False(t, store.Exists("non existent key"), "exist should work")
+
+	assert.Equal(t, "", store.Get("non existent key"), "empty key should give a default value")
+
+	assert.False(t, store.SetEX("ek1", "ev1"), "should be false")
+	assert.Equal(t, "", store.Get("ek1"), "should not have set anything")
+	store.Set("ek1", "some old value")
+	assert.True(t, store.SetEX("ek1", "ev2"), "should be true")
+	assert.Equal(t, "ev2", store.Get("ek1"), "should have set the value")
+
+	assert.True(t, store.SetNX("nk1", "vx1"), "should be true")
+	assert.Equal(t, "vx1", store.Get("nk1"), "should have set the value")
+	assert.False(t, store.SetNX("nk1", "vx2"), "should be false")
+	assert.Equal(t, "vx1", store.Get("nk1"), "should not have set the value")
 }
 
 func TestMemoryStore(t *testing.T) {
