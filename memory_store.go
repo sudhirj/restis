@@ -7,6 +7,7 @@ import "strconv"
 type MemoryStore struct {
 	strings map[string]string
 	sets    map[string]map[string]bool
+	hashes  map[string]map[string]string
 }
 
 func (s *MemoryStore) Get(key string) string {
@@ -68,43 +69,57 @@ func (s *MemoryStore) Exists(key string) bool {
 	return exists
 }
 
-func (s *MemoryStore) ensure(key string) {
+func (s *MemoryStore) ensureSet(key string) {
 	if _, ok := s.sets[key]; !ok {
 		s.sets[key] = make(map[string]bool)
 	}
 }
 
-func (s *MemoryStore) AddToSet(key string, values ...string) {
-	s.ensure(key)
+func (s *MemoryStore) SetAdd(key string, values ...string) {
+	s.ensureSet(key)
 	for _, value := range values {
 		s.sets[key][value] = true
 	}
 }
 
-func (s *MemoryStore) RemoveFromSet(key string, values ...string) {
-	s.ensure(key)
+func (s *MemoryStore) SetRemove(key string, values ...string) {
+	s.ensureSet(key)
 	for _, value := range values {
 		delete(s.sets[key], value)
 	}
 }
 
-func (s *MemoryStore) IsMemberOfSet(key string, value string) bool {
+func (s *MemoryStore) SetIsMember(key string, value string) bool {
 	_, exists := s.sets[key][value]
 	return exists
 }
 
-func (s *MemoryStore) CardinalityOfSet(key string) int64 {
-	s.ensure(key)
+func (s *MemoryStore) SetCardinality(key string) int64 {
+	s.ensureSet(key)
 	return int64(len(s.sets[key]))
 }
 
-func (s *MemoryStore) MembersOfSet(key string) []string {
-	s.ensure(key)
+func (s *MemoryStore) SetMembers(key string) []string {
+	s.ensureSet(key)
 	values := []string{}
 	for val := range s.sets[key] {
 		values = append(values, val)
 	}
 	return values
+}
+
+func (s *MemoryStore) ensureHash(key string) {
+	if _, ok := s.hashes[key]; !ok {
+		s.hashes[key] = make(map[string]string)
+	}
+}
+func (s *MemoryStore) HashGet(key, field string) string {
+	s.ensureHash(key)
+	return s.hashes[key][field]
+}
+func (s *MemoryStore) HashSet(key, field, value string) {
+	s.ensureHash(key)
+	s.hashes[key][field] = value
 }
 
 func (s *MemoryStore) transformNumber(key string, transform func(int64) int64) int64 {
@@ -122,5 +137,6 @@ func NewMemoryStore() Store {
 	return &MemoryStore{
 		strings: make(map[string]string),
 		sets:    make(map[string]map[string]bool),
+		hashes:  make(map[string]map[string]string),
 	}
 }

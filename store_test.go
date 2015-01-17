@@ -47,32 +47,39 @@ func StringOperations(t *testing.T, store Store) {
 }
 
 func SetOperations(t *testing.T, store Store) {
-	assert.False(t, store.IsMemberOfSet("sk1", "v1"))
-	assert.Equal(t, 0, store.CardinalityOfSet("sk1"))
+	assert.False(t, store.SetIsMember("sk1", "v1"))
+	assert.Equal(t, 0, store.SetCardinality("sk1"))
 
-	store.AddToSet("sk1", "v1")
-	assert.True(t, store.IsMemberOfSet("sk1", "v1"))
-	assert.False(t, store.IsMemberOfSet("sk1", "v2"))
-	assert.Equal(t, 1, store.CardinalityOfSet("sk1"))
+	store.SetAdd("sk1", "v1")
+	assert.True(t, store.SetIsMember("sk1", "v1"))
+	assert.False(t, store.SetIsMember("sk1", "v2"))
+	assert.Equal(t, 1, store.SetCardinality("sk1"))
 
-	store.AddToSet("sk1", "v2", "v1")
-	assert.True(t, store.IsMemberOfSet("sk1", "v2"))
-	assert.Equal(t, 2, store.CardinalityOfSet("sk1"))
+	store.SetAdd("sk1", "v2", "v1")
+	assert.True(t, store.SetIsMember("sk1", "v2"))
+	assert.Equal(t, 2, store.SetCardinality("sk1"))
 
-	members := store.MembersOfSet("sk1")
+	members := store.SetMembers("sk1")
 	sort.Sort(sort.StringSlice(members))
 
 	expected := []string{"v1", "v2"}
 	sort.Sort(sort.StringSlice(expected))
 	assert.Equal(t, members, expected)
 
-	store.RemoveFromSet("sk1", "v1")
-	assert.False(t, store.IsMemberOfSet("sk1", "v1"))
-	assert.Equal(t, 1, store.CardinalityOfSet("sk1"))
+	store.SetRemove("sk1", "v1")
+	assert.False(t, store.SetIsMember("sk1", "v1"))
+	assert.Equal(t, 1, store.SetCardinality("sk1"))
+}
+
+func HashOperations(t *testing.T, store Store) {
+	store.HashSet("hk1", "f1", "v1")
+	assert.Equal(t, "v1", store.HashGet("hk1", "f1"))
+	assert.Equal(t, "", store.HashGet("hk1", "f2"))
 }
 
 func TestMemoryStore(t *testing.T) {
 	memoryStore := NewMemoryStore()
 	StringOperations(t, memoryStore)
 	SetOperations(t, memoryStore)
+	HashOperations(t, memoryStore)
 }

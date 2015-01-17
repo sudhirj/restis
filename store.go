@@ -16,9 +16,13 @@ type Store interface {
 	Exists(key string) bool
 
 	// Sets
-	AddToSet(key string, values ...string)
-	RemoveFromSet(key string, values ...string)
-	IsMemberOfSet(key string, value string) bool
-	CardinalityOfSet(key string) int64
-	MembersOfSet(key string) []string
+	SetAdd(key string, values ...string)
+	SetRemove(key string, values ...string)
+	SetIsMember(key string, value string) bool
+	SetCardinality(key string) int64
+	SetMembers(key string) []string
+
+	// Hashes
+	HashGet(key, field string) string
+	HashSet(key, field, value string)
 }
