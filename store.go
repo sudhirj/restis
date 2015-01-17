@@ -18,4 +18,6 @@ type Store interface {
 	// Sets
 	SAdd(key string, values ...string)
 	SIsMember(key string, value string) bool
+	SCard(key string) int64
+	SMembers(key string) []string
 }

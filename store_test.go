@@ -2,6 +2,7 @@ package main
 
 import "testing"
 import "github.com/stretchr/testify/assert"
+import "sort"
 
 func StringOperations(t *testing.T, store Store) {
 	store.Set("k1", "v1")
@@ -47,11 +48,21 @@ func StringOperations(t *testing.T, store Store) {
 
 func SetOperations(t *testing.T, store Store) {
 	assert.False(t, store.SIsMember("sk1", "v1"))
+	assert.Equal(t, 0, store.SCard("sk1"))
 	store.SAdd("sk1", "v1")
 	assert.True(t, store.SIsMember("sk1", "v1"))
 	assert.False(t, store.SIsMember("sk1", "v2"))
+	assert.Equal(t, 1, store.SCard("sk1"))
 	store.SAdd("sk1", "v2", "v1")
 	assert.True(t, store.SIsMember("sk1", "v2"))
+	assert.Equal(t, 2, store.SCard("sk1"))
+
+	members := store.SMembers("sk1")
+	sort.Sort(sort.StringSlice(members))
+
+	expected := []string{"v1", "v2"}
+	sort.Sort(sort.StringSlice(expected))
+	assert.Equal(t, members, expected)
 }
 
 func TestMemoryStore(t *testing.T) {

@@ -86,6 +86,20 @@ func (s *MemoryStore) SIsMember(key string, value string) bool {
 	return exists
 }
 
+func (s *MemoryStore) SCard(key string) int64 {
+	s.ensure(key)
+	return int64(len(s.sets[key]))
+}
+
+func (s *MemoryStore) SMembers(key string) []string {
+	s.ensure(key)
+	values := []string{}
+	for val := range s.sets[key] {
+		values = append(values, val)
+	}
+	return values
+}
+
 func (s *MemoryStore) transformNumber(key string, transform func(int64) int64) int64 {
 	n, err := strconv.ParseInt(s.keyValues[key], 10, 64)
 	if err != nil {
