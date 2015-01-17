@@ -5,8 +5,8 @@ type Store interface {
 	// Strings
 	Get(key string) string
 	Set(key string, value string)
-	SetEX(key string, value string) bool
-	SetNX(key string, value string) bool
+	SetIfExists(key string, value string) bool
+	SetIfNotExists(key string, value string) bool
 	MultiGet(keys []string) map[string]string
 	MultiSet(map[string]string)
 	Increment(key string) int64
@@ -16,8 +16,9 @@ type Store interface {
 	Exists(key string) bool
 
 	// Sets
-	SAdd(key string, values ...string)
-	SIsMember(key string, value string) bool
-	SCard(key string) int64
-	SMembers(key string) []string
+	AddToSet(key string, values ...string)
+	RemoveFromSet(key string, values ...string)
+	IsMemberOfSet(key string, value string) bool
+	CardinalityOfSet(key string) int64
+	MembersOfSet(key string) []string
 }

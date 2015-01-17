@@ -17,7 +17,7 @@ func (s *MemoryStore) Set(key string, value string) {
 	s.strings[key] = value
 }
 
-func (s *MemoryStore) SetNX(key string, value string) bool {
+func (s *MemoryStore) SetIfNotExists(key string, value string) bool {
 	alreadyExists := s.Exists(key)
 	if !alreadyExists {
 		s.Set(key, value)
@@ -25,7 +25,7 @@ func (s *MemoryStore) SetNX(key string, value string) bool {
 	return !alreadyExists
 }
 
-func (s *MemoryStore) SetEX(key string, value string) bool {
+func (s *MemoryStore) SetIfExists(key string, value string) bool {
 	alreadyExists := s.Exists(key)
 	if alreadyExists {
 		s.Set(key, value)
@@ -74,24 +74,31 @@ func (s *MemoryStore) ensure(key string) {
 	}
 }
 
-func (s *MemoryStore) SAdd(key string, values ...string) {
+func (s *MemoryStore) AddToSet(key string, values ...string) {
 	s.ensure(key)
 	for _, value := range values {
 		s.sets[key][value] = true
 	}
 }
 
-func (s *MemoryStore) SIsMember(key string, value string) bool {
+func (s *MemoryStore) RemoveFromSet(key string, values ...string) {
+	s.ensure(key)
+	for _, value := range values {
+		delete(s.sets[key], value)
+	}
+}
+
+func (s *MemoryStore) IsMemberOfSet(key string, value string) bool {
 	_, exists := s.sets[key][value]
 	return exists
 }
 
-func (s *MemoryStore) SCard(key string) int64 {
+func (s *MemoryStore) CardinalityOfSet(key string) int64 {
 	s.ensure(key)
 	return int64(len(s.sets[key]))
 }
 
-func (s *MemoryStore) SMembers(key string) []string {
+func (s *MemoryStore) MembersOfSet(key string) []string {
 	s.ensure(key)
 	values := []string{}
 	for val := range s.sets[key] {

@@ -34,35 +34,41 @@ func StringOperations(t *testing.T, store Store) {
 
 	assert.Equal(t, "", store.Get("non existent key"))
 
-	assert.False(t, store.SetEX("ek1", "ev1"))
+	assert.False(t, store.SetIfExists("ek1", "ev1"))
 	assert.Equal(t, "", store.Get("ek1"))
 	store.Set("ek1", "some old value")
-	assert.True(t, store.SetEX("ek1", "ev2"))
+	assert.True(t, store.SetIfExists("ek1", "ev2"))
 	assert.Equal(t, "ev2", store.Get("ek1"))
 
-	assert.True(t, store.SetNX("nk1", "vx1"))
+	assert.True(t, store.SetIfNotExists("nk1", "vx1"))
 	assert.Equal(t, "vx1", store.Get("nk1"))
-	assert.False(t, store.SetNX("nk1", "vx2"))
+	assert.False(t, store.SetIfNotExists("nk1", "vx2"))
 	assert.Equal(t, "vx1", store.Get("nk1"))
 }
 
 func SetOperations(t *testing.T, store Store) {
-	assert.False(t, store.SIsMember("sk1", "v1"))
-	assert.Equal(t, 0, store.SCard("sk1"))
-	store.SAdd("sk1", "v1")
-	assert.True(t, store.SIsMember("sk1", "v1"))
-	assert.False(t, store.SIsMember("sk1", "v2"))
-	assert.Equal(t, 1, store.SCard("sk1"))
-	store.SAdd("sk1", "v2", "v1")
-	assert.True(t, store.SIsMember("sk1", "v2"))
-	assert.Equal(t, 2, store.SCard("sk1"))
+	assert.False(t, store.IsMemberOfSet("sk1", "v1"))
+	assert.Equal(t, 0, store.CardinalityOfSet("sk1"))
 
-	members := store.SMembers("sk1")
+	store.AddToSet("sk1", "v1")
+	assert.True(t, store.IsMemberOfSet("sk1", "v1"))
+	assert.False(t, store.IsMemberOfSet("sk1", "v2"))
+	assert.Equal(t, 1, store.CardinalityOfSet("sk1"))
+
+	store.AddToSet("sk1", "v2", "v1")
+	assert.True(t, store.IsMemberOfSet("sk1", "v2"))
+	assert.Equal(t, 2, store.CardinalityOfSet("sk1"))
+
+	members := store.MembersOfSet("sk1")
 	sort.Sort(sort.StringSlice(members))
 
 	expected := []string{"v1", "v2"}
 	sort.Sort(sort.StringSlice(expected))
 	assert.Equal(t, members, expected)
+
+	store.RemoveFromSet("sk1", "v1")
+	assert.False(t, store.IsMemberOfSet("sk1", "v1"))
+	assert.Equal(t, 1, store.CardinalityOfSet("sk1"))
 }
 
 func TestMemoryStore(t *testing.T) {
