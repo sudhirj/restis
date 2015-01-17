@@ -5,16 +5,16 @@ import "strconv"
 // MemoryStore acts as a datastore using the current instance's memory.
 // Does not offer persistence or distribution. Works only in single instance setups.
 type MemoryStore struct {
-	keyValues map[string]string
-	sets      map[string]map[string]bool
+	strings map[string]string
+	sets    map[string]map[string]bool
 }
 
 func (s *MemoryStore) Get(key string) string {
-	return s.keyValues[key]
+	return s.strings[key]
 }
 
 func (s *MemoryStore) Set(key string, value string) {
-	s.keyValues[key] = value
+	s.strings[key] = value
 }
 
 func (s *MemoryStore) SetNX(key string, value string) bool {
@@ -36,14 +36,14 @@ func (s *MemoryStore) SetEX(key string, value string) bool {
 func (s *MemoryStore) MultiGet(keys []string) map[string]string {
 	m := map[string]string{}
 	for _, k := range keys {
-		m[k] = s.keyValues[k]
+		m[k] = s.strings[k]
 	}
 	return m
 }
 
 func (s *MemoryStore) MultiSet(data map[string]string) {
 	for k, v := range data {
-		s.keyValues[k] = v
+		s.strings[k] = v
 	}
 }
 
@@ -64,7 +64,7 @@ func (s *MemoryStore) DecrementBy(key string, delta int64) int64 {
 }
 
 func (s *MemoryStore) Exists(key string) bool {
-	_, exists := s.keyValues[key]
+	_, exists := s.strings[key]
 	return exists
 }
 
@@ -101,19 +101,19 @@ func (s *MemoryStore) SMembers(key string) []string {
 }
 
 func (s *MemoryStore) transformNumber(key string, transform func(int64) int64) int64 {
-	n, err := strconv.ParseInt(s.keyValues[key], 10, 64)
+	n, err := strconv.ParseInt(s.strings[key], 10, 64)
 	if err != nil {
 		n = 0
 	}
 	n = transform(n)
-	s.keyValues[key] = strconv.FormatInt(n, 10)
+	s.strings[key] = strconv.FormatInt(n, 10)
 	return n
 }
 
 // NewMemoryStore creates a new memory store with a string map
 func NewMemoryStore() Store {
 	return &MemoryStore{
-		keyValues: make(map[string]string),
-		sets:      make(map[string]map[string]bool),
+		strings: make(map[string]string),
+		sets:    make(map[string]map[string]bool),
 	}
 }
