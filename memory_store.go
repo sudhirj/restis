@@ -113,13 +113,21 @@ func (s *MemoryStore) ensureHash(key string) {
 		s.hashes[key] = make(map[string]string)
 	}
 }
+
 func (s *MemoryStore) HashGet(key, field string) string {
 	s.ensureHash(key)
 	return s.hashes[key][field]
 }
+
 func (s *MemoryStore) HashSet(key, field, value string) {
 	s.ensureHash(key)
 	s.hashes[key][field] = value
+}
+
+func (s *MemoryStore) HashExists(key, field string) bool {
+	s.ensureHash(key)
+	_, exists := s.hashes[key][field]
+	return exists
 }
 
 func (s *MemoryStore) transformNumber(key string, transform func(int64) int64) int64 {

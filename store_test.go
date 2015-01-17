@@ -75,6 +75,9 @@ func HashOperations(t *testing.T, store Store) {
 	store.HashSet("hk1", "f1", "v1")
 	assert.Equal(t, "v1", store.HashGet("hk1", "f1"))
 	assert.Equal(t, "", store.HashGet("hk1", "f2"))
+	assert.False(t, store.HashExists("hk1", "f0"))
+	assert.True(t, store.HashExists("hk1", "f1"))
+	assert.False(t, store.HashExists("hk2", "f1"))
 }
 
 func TestMemoryStore(t *testing.T) {

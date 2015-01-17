@@ -25,4 +25,5 @@ type Store interface {
 	// Hashes
 	HashGet(key, field string) string
 	HashSet(key, field, value string)
+	HashExists(key, field string) bool
 }
