@@ -80,9 +80,25 @@ func HashOperations(t *testing.T, store Store) {
 	assert.False(t, store.HashExists("hk2", "f1"))
 }
 
+func RunAllTestsOnStore(t *testing.T, store Store) {
+	StringOperations(t, store)
+	SetOperations(t, store)
+	HashOperations(t, store)
+}
+
 func TestMemoryStore(t *testing.T) {
 	memoryStore := NewMemoryStore()
-	StringOperations(t, memoryStore)
-	SetOperations(t, memoryStore)
-	HashOperations(t, memoryStore)
+	RunAllTestsOnStore(t, memoryStore)
 }
+
+// TODO Redis
+// func TestRedisStore(t *testing.T) {
+// 	redisStore := NewRedisStore("localhost:5432")
+// 	RunAllTestsOnStore(t, redisStore)
+// }
+
+// TODO: Postgres Store
+// func TestPostgresStore(t *testing.T) {
+// 	postgresStore := NewPostgresStore("postgres://user:password@localhost:7654/testdb")
+// 	RunAllTestsOnStore(t, postgresStore)
+// }
