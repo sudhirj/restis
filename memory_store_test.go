@@ -1,4 +1,4 @@
-package main
+package restis
 
 import "testing"
 import "github.com/stretchr/testify/assert"
@@ -78,6 +78,10 @@ func HashOperations(t *testing.T, store Store) {
 	assert.False(t, store.HashExists("hk1", "f0"))
 	assert.True(t, store.HashExists("hk1", "f1"))
 	assert.False(t, store.HashExists("hk2", "f1"))
+
+	store.HashSet("hm1", "k1", "v1")
+	store.HashSet("hm1", "k2", "v2")
+	assert.Equal(t, []string{"v1", "v2", ""}, store.HashMultiGet("hm1", "k1", "k2", "unknownkey"))
 }
 
 func RunAllTestsOnStore(t *testing.T, store Store) {

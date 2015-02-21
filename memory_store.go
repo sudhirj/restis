@@ -1,4 +1,4 @@
-package main
+package restis
 
 import "strconv"
 
@@ -128,6 +128,14 @@ func (s *MemoryStore) HashExists(key, field string) bool {
 	s.ensureHash(key)
 	_, exists := s.hashes[key][field]
 	return exists
+}
+
+func (s *MemoryStore) HashMultiGet(key string, fields ...string) []string {
+	values := []string{}
+	for _, field := range fields {
+		values = append(values, s.HashGet(key, field))
+	}
+	return values
 }
 
 func (s *MemoryStore) transformNumber(key string, transform func(int64) int64) int64 {
