@@ -138,6 +138,12 @@ func (s *MemoryStore) HashMultiGet(key string, fields ...string) []string {
 	return values
 }
 
+func (s *MemoryStore) HashMultiSet(key string, data map[string]string) {
+	for field, value := range data {
+		s.HashSet(key, field, value)
+	}
+}
+
 func (s *MemoryStore) transformNumber(key string, transform func(int64) int64) int64 {
 	n, err := strconv.ParseInt(s.strings[key], 10, 64)
 	if err != nil {

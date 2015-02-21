@@ -4,7 +4,7 @@ import "testing"
 import "github.com/stretchr/testify/assert"
 import "sort"
 
-func StringOperations(t *testing.T, store Store) {
+func StringOperations(t *testing.T, store StringStore) {
 	store.Set("k1", "v1")
 	assert.Equal(t, "v1", store.Get("k1"))
 
@@ -46,7 +46,7 @@ func StringOperations(t *testing.T, store Store) {
 	assert.Equal(t, "vx1", store.Get("nk1"))
 }
 
-func SetOperations(t *testing.T, store Store) {
+func SetOperations(t *testing.T, store SetStore) {
 	assert.False(t, store.SetIsMember("sk1", "v1"))
 	assert.Equal(t, 0, store.SetCardinality("sk1"))
 
@@ -71,7 +71,7 @@ func SetOperations(t *testing.T, store Store) {
 	assert.Equal(t, 1, store.SetCardinality("sk1"))
 }
 
-func HashOperations(t *testing.T, store Store) {
+func HashOperations(t *testing.T, store HashStore) {
 	store.HashSet("hk1", "f1", "v1")
 	assert.Equal(t, "v1", store.HashGet("hk1", "f1"))
 	assert.Equal(t, "", store.HashGet("hk1", "f2"))
@@ -82,6 +82,11 @@ func HashOperations(t *testing.T, store Store) {
 	store.HashSet("hm1", "k1", "v1")
 	store.HashSet("hm1", "k2", "v2")
 	assert.Equal(t, []string{"v1", "v2", ""}, store.HashMultiGet("hm1", "k1", "k2", "unknownkey"))
+	assert.Equal(t, []string{"v1", "v2", ""}, store.HashMultiGet("hm1", []string{"k1", "k2", "unknownkey"}...))
+	store.HashMultiSet("hm2", map[string]string{"k1": "v1", "k2": "v2"})
+	assert.Equal(t, "v1", store.HashGet("hm2", "k1"))
+	assert.Equal(t, "v2", store.HashGet("hm2", "k2"))
+
 }
 
 func RunAllTestsOnStore(t *testing.T, store Store) {
