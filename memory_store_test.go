@@ -89,6 +89,9 @@ func HashOperations(t *testing.T, store HashStore) {
 	assert.Equal(t, 2, store.HashLength("hm2"))
 
 	assert.Equal(t, 0, store.HashLength("nonexistenthash"))
+	keys := store.HashKeys("hm2")
+	sort.Strings(keys)
+	assert.Equal(t, []string{"k1", "k2"}, keys)
 }
 
 func RunAllTestsOnStore(t *testing.T, store Store) {
