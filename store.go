@@ -31,6 +31,7 @@ type HashStore interface {
 	HashMultiGet(key string, fields ...string) []string
 	HashMultiSet(key string, data map[string]string)
 	HashExists(key, field string) bool
+	HashLength(key string) int64
 }
 
 // Store is full interface for the any datastore that backs Restis

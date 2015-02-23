@@ -86,7 +86,9 @@ func HashOperations(t *testing.T, store HashStore) {
 	store.HashMultiSet("hm2", map[string]string{"k1": "v1", "k2": "v2"})
 	assert.Equal(t, "v1", store.HashGet("hm2", "k1"))
 	assert.Equal(t, "v2", store.HashGet("hm2", "k2"))
+	assert.Equal(t, 2, store.HashLength("hm2"))
 
+	assert.Equal(t, 0, store.HashLength("nonexistenthash"))
 }
 
 func RunAllTestsOnStore(t *testing.T, store Store) {

@@ -144,6 +144,11 @@ func (s *MemoryStore) HashMultiSet(key string, data map[string]string) {
 	}
 }
 
+func (s *MemoryStore) HashLength(key string) int64 {
+	// s.ensureHash(key)
+	return int64(len(s.hashes[key]))
+}
+
 func (s *MemoryStore) transformNumber(key string, transform func(int64) int64) int64 {
 	n, err := strconv.ParseInt(s.strings[key], 10, 64)
 	if err != nil {
