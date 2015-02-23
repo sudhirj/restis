@@ -92,6 +92,9 @@ func HashOperations(t *testing.T, store HashStore) {
 	keys := store.HashKeys("hm2")
 	sort.Strings(keys)
 	assert.Equal(t, []string{"k1", "k2"}, keys)
+	values := store.HashValues("hm2")
+	sort.Strings(values)
+	assert.Equal(t, []string{"v1", "v2"}, values)
 }
 
 func RunAllTestsOnStore(t *testing.T, store Store) {

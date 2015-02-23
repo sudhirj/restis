@@ -156,6 +156,14 @@ func (s *MemoryStore) HashKeys(key string) []string {
 	return keys
 }
 
+func (s *MemoryStore) HashValues(key string) []string {
+	values := []string{}
+	for _, value := range s.hashes[key] {
+		values = append(values, value)
+	}
+	return values
+}
+
 func (s *MemoryStore) transformNumber(key string, transform func(int64) int64) int64 {
 	n, err := strconv.ParseInt(s.strings[key], 10, 64)
 	if err != nil {
