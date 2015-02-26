@@ -124,6 +124,10 @@ func (s *MemoryStore) HashSet(key, field, value string) {
 	s.hashes[key][field] = value
 }
 
+func (s *MemoryStore) HashLength(key string) int64 {
+	return int64(len(s.hashes[key]))
+}
+
 func (s *MemoryStore) HashExists(key, field string) bool {
 	s.ensureHash(key)
 	_, exists := s.hashes[key][field]
