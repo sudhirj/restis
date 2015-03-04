@@ -95,6 +95,17 @@ func HashOperations(t *testing.T, store HashStore) {
 	values := store.HashValues("hm2")
 	sort.Strings(values)
 	assert.Equal(t, []string{"v1", "v2"}, values)
+
+	assert.False(t, store.HashSetIfExists("hm2", "k3", "v3"))
+	store.HashSet("hm2", "k3", "v3")
+	assert.True(t, store.HashSetIfExists("hm2", "k3", "v3.1"))
+	assert.Equal(t, "v3.1", store.HashGet("hm2", "k3"))
+
+	assert.True(t, store.HashSetIfNotExists("hm2", "k4", "v4"))
+	assert.Equal(t, "v4", store.HashGet("hm2", "k4"))
+	assert.False(t, store.HashSetIfNotExists("hm2", "k4", "v4.1"))
+	assert.Equal(t, "v4", store.HashGet("hm2", "k4"))
+
 }
 
 func RunAllTestsOnStore(t *testing.T, store Store) {
@@ -107,15 +118,3 @@ func TestMemoryStore(t *testing.T) {
 	memoryStore := NewMemoryStore()
 	RunAllTestsOnStore(t, memoryStore)
 }
-
-// TODO Redis
-// func TestRedisStore(t *testing.T) {
-// 	redisStore := NewRedisStore("localhost:5432")
-// 	RunAllTestsOnStore(t, redisStore)
-// }
-
-// TODO: Postgres Store
-// func TestPostgresStore(t *testing.T) {
-// 	postgresStore := NewPostgresStore("postgres://user:password@localhost:7654/testdb")
-// 	RunAllTestsOnStore(t, postgresStore)
-// }

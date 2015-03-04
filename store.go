@@ -34,6 +34,8 @@ type HashStore interface {
 	HashLength(key string) int64
 	HashKeys(key string) []string
 	HashValues(key string) []string
+	HashSetIfExists(key, field string, value string) bool
+	HashSetIfNotExists(key, field string, value string) bool
 }
 
 // Store is full interface for the any datastore that backs Restis

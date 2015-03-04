@@ -124,6 +124,24 @@ func (s *MemoryStore) HashSet(key, field, value string) {
 	s.hashes[key][field] = value
 }
 
+func (s *MemoryStore) HashSetIfExists(key, field string, value string) bool {
+	s.ensureHash(key)
+	alreadyExists := s.HashExists(key, field)
+	if alreadyExists {
+		s.HashSet(key, field, value)
+	}
+	return alreadyExists
+}
+
+func (s *MemoryStore) HashSetIfNotExists(key, field string, value string) bool {
+	s.ensureHash(key)
+	alreadyExists := s.HashExists(key, field)
+	if !alreadyExists {
+		s.HashSet(key, field, value)
+	}
+	return !alreadyExists
+}
+
 func (s *MemoryStore) HashExists(key, field string) bool {
 	s.ensureHash(key)
 	_, exists := s.hashes[key][field]
