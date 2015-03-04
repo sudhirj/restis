@@ -95,6 +95,7 @@ func HashOperations(t *testing.T, store HashStore) {
 	values := store.HashValues("hm2")
 	sort.Strings(values)
 	assert.Equal(t, []string{"v1", "v2"}, values)
+	assert.Equal(t, 2, store.HashLength("hm2"))
 
 	assert.False(t, store.HashSetIfExists("hm2", "k3", "v3"))
 	store.HashSet("hm2", "k3", "v3")
@@ -105,6 +106,7 @@ func HashOperations(t *testing.T, store HashStore) {
 	assert.Equal(t, "v4", store.HashGet("hm2", "k4"))
 	assert.False(t, store.HashSetIfNotExists("hm2", "k4", "v4.1"))
 	assert.Equal(t, "v4", store.HashGet("hm2", "k4"))
+	assert.Equal(t, 4, store.HashLength("hm2"))
 
 }
 

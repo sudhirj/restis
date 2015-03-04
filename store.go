@@ -28,10 +28,10 @@ type SetStore interface {
 type HashStore interface {
 	HashGet(key, field string) string
 	HashSet(key, field, value string)
+	HashLength(key string) int64
 	HashMultiGet(key string, fields ...string) []string
 	HashMultiSet(key string, data map[string]string)
 	HashExists(key, field string) bool
-	HashLength(key string) int64
 	HashKeys(key string) []string
 	HashValues(key string) []string
 	HashSetIfExists(key, field string, value string) bool
