@@ -110,10 +110,16 @@ func HashOperations(t *testing.T, store HashStore) {
 
 }
 
+func ListOperations(t *testing.T, store ListStore) {
+	assert.Equal(t, 1, store.ListPush("lk1", "lv1"))
+	assert.Equal(t, 1, store.ListLength("lk1"))
+}
+
 func RunAllTestsOnStore(t *testing.T, store Store) {
 	StringOperations(t, store)
 	SetOperations(t, store)
 	HashOperations(t, store)
+	ListOperations(t, store)
 }
 
 func TestMemoryStore(t *testing.T) {

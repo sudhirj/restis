@@ -38,9 +38,15 @@ type HashStore interface {
 	HashSetIfNotExists(key, field string, value string) bool
 }
 
+type ListStore interface {
+	ListPush(key string, values ...string) int64
+	ListLength(key string) int64
+}
+
 // Store is full interface for the any datastore that backs Restis
 type Store interface {
 	StringStore
 	SetStore
 	HashStore
+	ListStore
 }

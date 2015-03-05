@@ -8,6 +8,7 @@ type MemoryStore struct {
 	strings map[string]string
 	sets    map[string]map[string]bool
 	hashes  map[string]map[string]string
+	lists   map[string][]string
 }
 
 func (s *MemoryStore) Get(key string) string {
@@ -192,11 +193,23 @@ func (s *MemoryStore) transformNumber(key string, transform func(int64) int64) i
 	return n
 }
 
+func (s *MemoryStore) ListPush(key string, values ...string) int64 {
+	for _, value := range values {
+		s.lists[key] = append(s.lists[key], value)
+	}
+	return int64(len(s.lists[key]))
+}
+
+func (s *MemoryStore) ListLength(key string) int64 {
+	return int64(len(s.lists[key]))
+}
+
 // NewMemoryStore creates a new memory store with a string map
 func NewMemoryStore() Store {
 	return &MemoryStore{
 		strings: make(map[string]string),
 		sets:    make(map[string]map[string]bool),
 		hashes:  make(map[string]map[string]string),
+		lists:   make(map[string][]string),
 	}
 }
