@@ -206,6 +206,41 @@ func (s *MemoryStore) ListLength(key string) int64 {
 	return int64(len(s.lists[key]))
 }
 
+func min(x, y int64) int64 {
+	if x < y {
+		return x
+	}
+	return y
+}
+
+func normalize(length, offset int64) int64 {
+	if offset < 0 {
+		return offset + length
+	}
+	return offset
+}
+
+func (s *MemoryStore) ListRange(key string, start, stop int64) []string {
+	length := int64(len(s.lists[key]))
+	start = normalize(length, start)
+	stop = normalize(length, stop)
+
+	if start < 0 {
+		start = 0
+	}
+
+	if stop < 0 {
+		stop = -1
+	}
+
+	stop = stop + 1
+
+	start = min(start, length)
+	stop = min(stop, length)
+
+	return s.lists[key][start:stop]
+}
+
 // NewMemoryStore creates a new memory store with a string map
 func NewMemoryStore() Store {
 	return &MemoryStore{

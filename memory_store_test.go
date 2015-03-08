@@ -118,6 +118,19 @@ func ListOperations(t *testing.T, store ListStore) {
 	assert.Equal(t, 1, store.ListLength("lk1"))
 	assert.Equal(t, 3, store.ListPush("lk1", "lv2", "lv3"))
 	assert.Equal(t, 3, store.ListLength("lk1"))
+
+	assert.Equal(t, []string{"lv1"}, store.ListRange("lk1", 0, 0))
+	assert.Equal(t, []string{"lv1", "lv2"}, store.ListRange("lk1", 0, 1))
+	assert.Equal(t, []string{"lv2", "lv3"}, store.ListRange("lk1", 1, 10))
+
+	assert.Equal(t, []string{"lv1", "lv2", "lv3"}, store.ListRange("lk1", -3, 2))
+	assert.Equal(t, []string{"lv1", "lv2", "lv3"}, store.ListRange("lk1", -100, 100))
+	assert.Equal(t, []string{}, store.ListRange("lk1", 5, 10))
+
+	assert.Equal(t, []string{"lv1", "lv2", "lv3"}, store.ListRange("lk1", 0, -1))
+	assert.Equal(t, []string{"lv1", "lv2"}, store.ListRange("lk1", 0, -2))
+	assert.Equal(t, []string{}, store.ListRange("lk1", 0, -20))
+	assert.Equal(t, []string{}, store.ListRange("lk1", -10, -20))
 }
 
 func RunAllTestsOnStore(t *testing.T, store Store) {
