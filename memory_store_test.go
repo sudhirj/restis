@@ -1,8 +1,11 @@
 package restis
 
-import "testing"
-import "github.com/stretchr/testify/assert"
-import "sort"
+import (
+	"sort"
+	"testing"
+
+	"github.com/stretchr/testify/assert"
+)
 
 func StringOperations(t *testing.T, store StringStore) {
 	store.Set("k1", "v1")
@@ -113,6 +116,8 @@ func HashOperations(t *testing.T, store HashStore) {
 func ListOperations(t *testing.T, store ListStore) {
 	assert.Equal(t, 1, store.ListPush("lk1", "lv1"))
 	assert.Equal(t, 1, store.ListLength("lk1"))
+	assert.Equal(t, 3, store.ListPush("lk1", "lv2", "lv3"))
+	assert.Equal(t, 3, store.ListLength("lk1"))
 }
 
 func RunAllTestsOnStore(t *testing.T, store Store) {

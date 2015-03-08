@@ -1,6 +1,8 @@
 package restis
 
-import "strconv"
+import (
+	"strconv"
+)
 
 // MemoryStore acts as a datastore using the current instance's memory.
 // Does not offer persistence or distribution. Works only in single instance setups.
