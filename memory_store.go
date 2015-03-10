@@ -213,6 +213,13 @@ func min(x, y int64) int64 {
 	return y
 }
 
+func max(x, y int64) int64 {
+	if x > y {
+		return x
+	}
+	return y
+}
+
 func normalize(length, offset int64) int64 {
 	if offset < 0 {
 		return offset + length
@@ -225,15 +232,10 @@ func (s *MemoryStore) ListRange(key string, start, stop int64) []string {
 	start = normalize(length, start)
 	stop = normalize(length, stop)
 
-	if start < 0 {
-		start = 0
-	}
+	start = max(start, 0)
+	stop = max(stop, -1)
 
-	if stop < 0 {
-		stop = -1
-	}
-
-	stop = stop + 1
+	stop = stop + 1 // Make the stop index inclusive
 
 	start = min(start, length)
 	stop = min(stop, length)
