@@ -199,14 +199,14 @@ func (s *MemoryStore) ListLeftPush(key string, values ...string) int64 {
 	for _, value := range values {
 		s.lists[key] = append([]string{value}, s.lists[key]...)
 	}
-	return int64(len(s.lists[key]))
+	return s.ListLength(key)
 }
 
 func (s *MemoryStore) ListRightPush(key string, values ...string) int64 {
 	for _, value := range values {
 		s.lists[key] = append(s.lists[key], value)
 	}
-	return int64(len(s.lists[key]))
+	return s.ListLength(key)
 }
 
 func (s *MemoryStore) ListLength(key string) int64 {
@@ -220,7 +220,7 @@ func (s *MemoryStore) ListLeftPop(key string) string {
 }
 
 func (s *MemoryStore) ListRightPop(key string) string {
-	lastIndex := len(s.lists[key]) - 1
+	lastIndex := s.ListLength(key) - 1
 	popped := s.lists[key][lastIndex]
 	s.lists[key] = s.lists[key][0:lastIndex]
 	return popped
@@ -248,7 +248,7 @@ func normalize(length, offset int64) int64 {
 }
 
 func (s *MemoryStore) ListRange(key string, start, stop int64) []string {
-	length := int64(len(s.lists[key]))
+	length := s.ListLength(key)
 	start = normalize(length, start)
 	stop = normalize(length, stop)
 
