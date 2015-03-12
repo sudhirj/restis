@@ -213,6 +213,19 @@ func (s *MemoryStore) ListLength(key string) int64 {
 	return int64(len(s.lists[key]))
 }
 
+func (s *MemoryStore) ListLeftPop(key string) string {
+	popped := s.lists[key][0]
+	s.lists[key] = s.lists[key][1:]
+	return popped
+}
+
+func (s *MemoryStore) ListRightPop(key string) string {
+	lastIndex := len(s.lists[key]) - 1
+	popped := s.lists[key][lastIndex]
+	s.lists[key] = s.lists[key][0:lastIndex]
+	return popped
+}
+
 func min(x, y int64) int64 {
 	if x < y {
 		return x
