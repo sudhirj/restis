@@ -195,7 +195,14 @@ func (s *MemoryStore) transformNumber(key string, transform func(int64) int64) i
 	return n
 }
 
-func (s *MemoryStore) ListPush(key string, values ...string) int64 {
+func (s *MemoryStore) ListLeftPush(key string, values ...string) int64 {
+	for _, value := range values {
+		s.lists[key] = append([]string{value}, s.lists[key]...)
+	}
+	return int64(len(s.lists[key]))
+}
+
+func (s *MemoryStore) ListRightPush(key string, values ...string) int64 {
 	for _, value := range values {
 		s.lists[key] = append(s.lists[key], value)
 	}

@@ -39,7 +39,8 @@ type HashStore interface {
 }
 
 type ListStore interface {
-	ListPush(key string, values ...string) int64
+	ListLeftPush(key string, values ...string) int64
+	ListRightPush(key string, values ...string) int64
 	ListLength(key string) int64
 	ListRange(key string, start, stop int64) []string
 }

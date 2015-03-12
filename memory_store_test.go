@@ -114,9 +114,9 @@ func HashOperations(t *testing.T, store HashStore) {
 }
 
 func ListOperations(t *testing.T, store ListStore) {
-	assert.Equal(t, 1, store.ListPush("lk1", "lv1"))
+	assert.Equal(t, 1, store.ListRightPush("lk1", "lv1"))
 	assert.Equal(t, 1, store.ListLength("lk1"))
-	assert.Equal(t, 3, store.ListPush("lk1", "lv2", "lv3"))
+	assert.Equal(t, 3, store.ListRightPush("lk1", "lv2", "lv3"))
 	assert.Equal(t, 3, store.ListLength("lk1"))
 
 	assert.Equal(t, []string{"lv1"}, store.ListRange("lk1", 0, 0))
@@ -131,6 +131,12 @@ func ListOperations(t *testing.T, store ListStore) {
 	assert.Equal(t, []string{"lv1", "lv2"}, store.ListRange("lk1", 0, -2))
 	assert.Equal(t, []string{}, store.ListRange("lk1", 0, -20))
 	assert.Equal(t, []string{}, store.ListRange("lk1", -10, -20))
+
+	assert.Equal(t, 4, store.ListLeftPush("lk1", "lv0"))
+	assert.Equal(t, 4, store.ListLength("lk1"))
+	assert.Equal(t, []string{"lv0", "lv1", "lv2", "lv3"}, store.ListRange("lk1", 0, 10))
+	assert.Equal(t, 6, store.ListLeftPush("lk1", "lv-1", "lv-2"))
+	assert.Equal(t, []string{"lv-2", "lv-1", "lv0", "lv1", "lv2", "lv3"}, store.ListRange("lk1", 0, 10))
 }
 
 func RunAllTestsOnStore(t *testing.T, store Store) {
