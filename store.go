@@ -45,6 +45,7 @@ type ListStore interface {
 	ListRightPop(key string) string
 	ListLength(key string) int64
 	ListRange(key string, start, stop int64) []string
+	ListSet(key string, index int64, value string) bool
 }
 
 // Store is full interface for the any datastore that backs Restis

@@ -263,6 +263,16 @@ func (s *MemoryStore) ListRange(key string, start, stop int64) []string {
 	return s.lists[key][start:stop]
 }
 
+func (s *MemoryStore) ListSet(key string, index int64, value string) bool {
+	length := s.ListLength(key)
+	index = normalize(length, index)
+	if index > length-1 || index < 0 {
+		return false
+	}
+	s.lists[key][index] = value
+	return true
+}
+
 // NewMemoryStore creates a new memory store with a string map
 func NewMemoryStore() Store {
 	return &MemoryStore{
