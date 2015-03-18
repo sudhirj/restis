@@ -247,6 +247,10 @@ func normalize(length, offset int64) int64 {
 	return offset
 }
 
+func outOfBounds(length, index int64) bool {
+	return index > length-1 || index < 0
+}
+
 func (s *MemoryStore) ListRange(key string, start, stop int64) []string {
 	length := s.ListLength(key)
 	start = normalize(length, start)
@@ -266,11 +270,20 @@ func (s *MemoryStore) ListRange(key string, start, stop int64) []string {
 func (s *MemoryStore) ListSet(key string, index int64, value string) bool {
 	length := s.ListLength(key)
 	index = normalize(length, index)
-	if index > length-1 || index < 0 {
+	if outOfBounds(length, index) {
 		return false
 	}
 	s.lists[key][index] = value
 	return true
+}
+
+func (s *MemoryStore) ListIndex(key string, index int64) string {
+	length := s.ListLength(key)
+	index = normalize(length, index)
+	if outOfBounds(length, index) {
+		return ""
+	}
+	return s.lists[key][index]
 }
 
 // NewMemoryStore creates a new memory store with a string map
