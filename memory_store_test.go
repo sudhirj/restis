@@ -5,4 +5,5 @@ import "testing"
 func TestMemoryStore(t *testing.T) {
 	memoryStore := NewMemoryStore()
 	RunAllTestsOnStore(t, memoryStore)
+	RunAllRedisDocChecksOnStore(t, memoryStore)
 }
