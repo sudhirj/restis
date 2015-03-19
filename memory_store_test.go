@@ -161,6 +161,10 @@ func ListOperations(t *testing.T, store ListStore) {
 	assert.Equal(t, "lv0", store.ListIndex("lk1", 1))
 	assert.Equal(t, "lv2.2", store.ListIndex("lk1", -1))
 	assert.Equal(t, "", store.ListIndex("lk1", -10))
+
+	store.ListTrim("lk1", 1, -2)
+	assert.Equal(t, []string{"lv0", "lv1"}, store.ListRange("lk1", 0, 10))
+
 }
 
 func RunAllTestsOnStore(t *testing.T, store Store) {

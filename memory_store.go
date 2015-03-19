@@ -286,6 +286,10 @@ func (s *MemoryStore) ListIndex(key string, index int64) string {
 	return s.lists[key][index]
 }
 
+func (s *MemoryStore) ListTrim(key string, start, stop int64) {
+	s.lists[key] = s.ListRange(key, start, stop)
+}
+
 // NewMemoryStore creates a new memory store with a string map
 func NewMemoryStore() Store {
 	return &MemoryStore{
