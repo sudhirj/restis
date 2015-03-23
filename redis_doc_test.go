@@ -40,6 +40,14 @@ func CheckINCRBY(t *testing.T, store StringStore) {
 	assert.Equal(t, 15, store.IncrementBy("mykey", 5))
 }
 
+func CheckGETRANGE(t *testing.T, store StringStore) {
+	store.Set("mykey", "This is a string")
+	assert.Equal(t, "This", store.GetRange("mykey", 0, 3))
+	assert.Equal(t, "ing", store.GetRange("mykey", -3, -1))
+	assert.Equal(t, "This is a string", store.GetRange("mykey", 0, -1))
+	assert.Equal(t, "string", store.GetRange("mykey", 10, 100))
+}
+
 func RunAllRedisDocChecksOnStore(t *testing.T, store Store) {
 	CheckGET(t, store)
 	CheckSET(t, store)
@@ -47,4 +55,5 @@ func RunAllRedisDocChecksOnStore(t *testing.T, store Store) {
 	CheckDECRBY(t, store)
 	CheckINCR(t, store)
 	CheckINCRBY(t, store)
+	CheckGETRANGE(t, store)
 }
