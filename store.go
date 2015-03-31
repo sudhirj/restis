@@ -2,7 +2,9 @@ package restis
 
 // Strings is the list of operations available for string keys
 type StringStore interface {
+	Append(key, value string) int64
 	Get(key string) string
+	GetRange(key string, start, stop int64) string
 	Set(key string, value string)
 	SetIfExists(key string, value string) bool
 	SetIfNotExists(key string, value string) bool

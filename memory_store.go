@@ -13,8 +13,18 @@ type MemoryStore struct {
 	lists   map[string][]string
 }
 
+func (s *MemoryStore) Append(key, value string) int64 {
+	s.strings[key] = s.strings[key] + value
+	return int64(len(s.strings[key]))
+}
+
 func (s *MemoryStore) Get(key string) string {
 	return s.strings[key]
+}
+
+func (s *MemoryStore) GetRange(key string, start, stop int64) string {
+	return ""
+
 }
 
 func (s *MemoryStore) Set(key string, value string) {
