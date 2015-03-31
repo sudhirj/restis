@@ -45,17 +45,11 @@ func GET(t *testing.T, store StringStore) {
 
 func GETRANGE(t *testing.T, store StringStore) {
 	store.Set("mykey", "This is a string")
-	// assert.Equal(t, "This", store.GetRange("mykey", 0, 3))
+	assert.Equal(t, "This", store.GetRange("mykey", 0, 3))
+	assert.Equal(t, "ing", store.GetRange("mykey", -3, -1))
+	assert.Equal(t, "This is a string", store.GetRange("mykey", 0, -1))
+	assert.Equal(t, "string", store.GetRange("mykey", 10, 100))
 }
-
-// redis> GETRANGE mykey 0 3
-// "This"
-// redis> GETRANGE mykey -3 -1
-// "ing"
-// redis> GETRANGE mykey 0 -1
-// "This is a string"
-// redis> GETRANGE mykey 10 100
-// "string"
 
 func SET(t *testing.T, store StringStore) {
 	store.Set("mykey", "Hello")

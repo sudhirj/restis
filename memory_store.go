@@ -4,8 +4,6 @@ import (
 	"strconv"
 )
 
-// MemoryStore acts as a datastore using the current instance's memory.
-// Does not offer persistence or distribution. Works only in single instance setups.
 type MemoryStore struct {
 	strings map[string]string
 	sets    map[string]map[string]bool
@@ -21,10 +19,23 @@ func (s *MemoryStore) Append(key, value string) int64 {
 func (s *MemoryStore) Get(key string) string {
 	return s.strings[key]
 }
-
 func (s *MemoryStore) GetRange(key string, start, stop int64) string {
-	return ""
+	start, stop = renormalize(int64(len(s.strings[key])), start, stop)
+	return s.strings[key][start:stop]
+}
 
+func renormalize(length, start, stop int64) (int64, int64) {
+	start = normalize(length, start)
+	stop = normalize(length, stop)
+
+	start = max(start, 0)
+	stop = max(stop, -1)
+
+	stop = stop + 1 // Make the stop index inclusive
+
+	start = min(start, length)
+	stop = min(stop, length)
+	return start, stop
 }
 
 func (s *MemoryStore) Set(key string, value string) {
@@ -262,18 +273,7 @@ func outOfBounds(length, index int64) bool {
 }
 
 func (s *MemoryStore) ListRange(key string, start, stop int64) []string {
-	length := s.ListLength(key)
-	start = normalize(length, start)
-	stop = normalize(length, stop)
-
-	start = max(start, 0)
-	stop = max(stop, -1)
-
-	stop = stop + 1 // Make the stop index inclusive
-
-	start = min(start, length)
-	stop = min(stop, length)
-
+	start, stop = renormalize(s.ListLength(key), start, stop)
 	return s.lists[key][start:stop]
 }
 
@@ -300,7 +300,6 @@ func (s *MemoryStore) ListTrim(key string, start, stop int64) {
 	s.lists[key] = s.ListRange(key, start, stop)
 }
 
-// NewMemoryStore creates a new memory store with a string map
 func NewMemoryStore() Store {
 	return &MemoryStore{
 		strings: make(map[string]string),

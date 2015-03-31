@@ -1,6 +1,5 @@
 package restis
 
-// Strings is the list of operations available for string keys
 type StringStore interface {
 	Append(key, value string) int64
 	Get(key string) string
@@ -17,7 +16,6 @@ type StringStore interface {
 	Exists(key string) bool
 }
 
-// Sets is the list of operations available for set keys
 type SetStore interface {
 	SetAdd(key string, values ...string)
 	SetRemove(key string, values ...string)
@@ -26,7 +24,6 @@ type SetStore interface {
 	SetCardinality(key string) int64
 }
 
-// Hashes is the list of operations available for hash types
 type HashStore interface {
 	HashGet(key, field string) string
 	HashSet(key, field, value string)
@@ -52,7 +49,6 @@ type ListStore interface {
 	ListTrim(key string, start, stop int64)
 }
 
-// Store is full interface for the any datastore that backs Restis
 type Store interface {
 	StringStore
 	SetStore
