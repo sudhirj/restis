@@ -68,7 +68,9 @@ func (s *MemoryStore) SetIfExists(key string, value string) bool {
 func (s *MemoryStore) MultiGet(keys []string) map[string]string {
 	m := map[string]string{}
 	for _, k := range keys {
-		m[k] = s.strings[k]
+		if s.Exists(k) {
+			m[k] = s.strings[k]
+		}
 	}
 	return m
 }

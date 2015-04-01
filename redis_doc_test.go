@@ -13,10 +13,11 @@ func RunAllRedisDocChecksOnStore(t *testing.T, store Store) {
 	GET(t, store)
 	GETRANGE(t, store)
 	GETSET(t, store)
-	SET(t, store)
-
 	INCR(t, store)
 	INCRBY(t, store)
+	MGET(t, store)
+	MSET(t, store)
+	SET(t, store)
 }
 
 func APPEND(t *testing.T, store StringStore) {
@@ -62,11 +63,6 @@ func GETSET(t *testing.T, store StringStore) {
 	assert.Equal(t, "World", store.Get("mykey"))
 }
 
-func SET(t *testing.T, store StringStore) {
-	store.Set("mykey", "Hello")
-	assert.Equal(t, "Hello", store.Get("mykey"))
-}
-
 func INCR(t *testing.T, store StringStore) {
 	store.Set("mykey", "10")
 	assert.Equal(t, 11, store.Increment("mykey"))
@@ -76,4 +72,21 @@ func INCR(t *testing.T, store StringStore) {
 func INCRBY(t *testing.T, store StringStore) {
 	store.Set("mykey", "10")
 	assert.Equal(t, 15, store.IncrementBy("mykey", 5))
+}
+
+func MGET(t *testing.T, store StringStore) {
+	store.Set("key1", "Hello")
+	store.Set("key2", "World")
+	assert.Equal(t, map[string]string{"key1": "Hello", "key2": "World"}, store.MultiGet([]string{"key1", "key2", "nonexisting"}))
+}
+
+func MSET(t *testing.T, store StringStore) {
+	store.MultiSet(map[string]string{"key1": "Hello", "key2": "World"})
+	assert.Equal(t, "Hello", store.Get("key1"))
+	assert.Equal(t, "World", store.Get("key2"))
+}
+
+func SET(t *testing.T, store StringStore) {
+	store.Set("mykey", "Hello")
+	assert.Equal(t, "Hello", store.Get("mykey"))
 }
