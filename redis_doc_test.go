@@ -12,6 +12,7 @@ func RunAllRedisDocChecksOnStore(t *testing.T, store Store) {
 	DECRBY(t, store)
 	GET(t, store)
 	GETRANGE(t, store)
+	GETSET(t, store)
 	SET(t, store)
 
 	INCR(t, store)
@@ -49,6 +50,16 @@ func GETRANGE(t *testing.T, store StringStore) {
 	assert.Equal(t, "ing", store.GetRange("mykey", -3, -1))
 	assert.Equal(t, "This is a string", store.GetRange("mykey", 0, -1))
 	assert.Equal(t, "string", store.GetRange("mykey", 10, 100))
+}
+
+func GETSET(t *testing.T, store StringStore) {
+	assert.Equal(t, 1, store.Increment("mycounter"))
+	assert.Equal(t, "1", store.GetSet("mycounter", "0"))
+	assert.Equal(t, "0", store.Get("mycounter"))
+
+	store.Set("mykey", "Hello")
+	assert.Equal(t, "Hello", store.GetSet("mykey", "World"))
+	assert.Equal(t, "World", store.Get("mykey"))
 }
 
 func SET(t *testing.T, store StringStore) {

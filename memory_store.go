@@ -19,9 +19,16 @@ func (s *MemoryStore) Append(key, value string) int64 {
 func (s *MemoryStore) Get(key string) string {
 	return s.strings[key]
 }
+
 func (s *MemoryStore) GetRange(key string, start, stop int64) string {
 	start, stop = renormalize(int64(len(s.strings[key])), start, stop)
 	return s.strings[key][start:stop]
+}
+
+func (s *MemoryStore) GetSet(key, value string) string {
+	v := s.Get(key)
+	s.Set(key, value)
+	return v
 }
 
 func renormalize(length, start, stop int64) (int64, int64) {
