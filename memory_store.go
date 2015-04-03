@@ -112,6 +112,10 @@ func (s *MemoryStore) Exists(key string) bool {
 	return exists
 }
 
+func (s *MemoryStore) Length(key string) int64 {
+	return int64(len(s.Get(key)))
+}
+
 func (s *MemoryStore) ensureSet(key string) {
 	if _, ok := s.sets[key]; !ok {
 		s.sets[key] = make(map[string]bool)

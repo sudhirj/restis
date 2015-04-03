@@ -16,6 +16,7 @@ type StringStore interface {
 	IncrementBy(key string, delta int64) int64
 	DecrementBy(key string, delta int64) int64
 	Exists(key string) bool
+	Length(key string) int64
 }
 
 type SetStore interface {

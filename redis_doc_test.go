@@ -19,6 +19,9 @@ func RunAllRedisDocChecksOnStore(t *testing.T, storeGen storeGenerator) {
 	MSET(t, storeGen())
 	MSETNX(t, storeGen())
 	SET(t, storeGen())
+	SETNX(t, storeGen())
+	SETRANGE(t, storeGen())
+	STRLEN(t, storeGen())
 }
 
 func APPEND(t *testing.T, store StringStore) {
@@ -96,4 +99,19 @@ func MSETNX(t *testing.T, store StringStore) {
 func SET(t *testing.T, store StringStore) {
 	store.Set("mykey", "Hello")
 	assert.Equal(t, "Hello", store.Get("mykey"))
+}
+
+func SETNX(t *testing.T, store StringStore) {
+	assert.True(t, store.SetIfNotExists("mykey", "Hello"))
+	assert.False(t, store.SetIfNotExists("mykey", "World"))
+	assert.Equal(t, "Hello", store.Get("mykey"))
+}
+
+func SETRANGE(t *testing.T, store StringStore) {
+}
+
+func STRLEN(t *testing.T, store StringStore) {
+	store.Set("mykey", "Hello world")
+	assert.Equal(t, 11, store.Length("mykey"))
+	assert.Equal(t, 0, store.Length("nonexisting"))
 }
