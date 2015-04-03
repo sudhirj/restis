@@ -7,6 +7,8 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+type storeGenerator func() Store
+
 func CheckStringOperations(t *testing.T, store StringStore) {
 	store.Set("k1", "v1")
 	assert.Equal(t, "v1", store.Get("k1"))
@@ -167,9 +169,9 @@ func CheckListOperations(t *testing.T, store ListStore) {
 
 }
 
-func RunAllTestsOnStore(t *testing.T, store Store) {
-	CheckStringOperations(t, store)
-	CheckSetOperations(t, store)
-	CheckHashOperations(t, store)
-	CheckListOperations(t, store)
+func RunAllTestsOnStore(t *testing.T, storeGen storeGenerator) {
+	CheckStringOperations(t, storeGen())
+	CheckSetOperations(t, storeGen())
+	CheckHashOperations(t, storeGen())
+	CheckListOperations(t, storeGen())
 }

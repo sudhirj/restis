@@ -3,7 +3,9 @@ package restis
 import "testing"
 
 func TestMemoryStore(t *testing.T) {
-	memoryStore := NewMemoryStore()
-	RunAllTestsOnStore(t, memoryStore)
-	RunAllRedisDocChecksOnStore(t, memoryStore)
+	storeGenerator := func() Store {
+		return NewMemoryStore()
+	}
+	RunAllTestsOnStore(t, storeGenerator)
+	RunAllRedisDocChecksOnStore(t, storeGenerator)
 }

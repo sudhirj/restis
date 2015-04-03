@@ -10,6 +10,7 @@ type StringStore interface {
 	SetIfNotExists(key string, value string) bool
 	MultiGet(keys []string) map[string]string
 	MultiSet(map[string]string)
+	MultiSetIfNotExists(map[string]string) bool
 	Increment(key string) int64
 	Decrement(key string) int64
 	IncrementBy(key string, delta int64) int64

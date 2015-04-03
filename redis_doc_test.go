@@ -6,18 +6,19 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func RunAllRedisDocChecksOnStore(t *testing.T, store Store) {
-	APPEND(t, store)
-	DECR(t, store)
-	DECRBY(t, store)
-	GET(t, store)
-	GETRANGE(t, store)
-	GETSET(t, store)
-	INCR(t, store)
-	INCRBY(t, store)
-	MGET(t, store)
-	MSET(t, store)
-	SET(t, store)
+func RunAllRedisDocChecksOnStore(t *testing.T, storeGen storeGenerator) {
+	APPEND(t, storeGen())
+	DECR(t, storeGen())
+	DECRBY(t, storeGen())
+	GET(t, storeGen())
+	GETRANGE(t, storeGen())
+	GETSET(t, storeGen())
+	INCR(t, storeGen())
+	INCRBY(t, storeGen())
+	MGET(t, storeGen())
+	MSET(t, storeGen())
+	MSETNX(t, storeGen())
+	SET(t, storeGen())
 }
 
 func APPEND(t *testing.T, store StringStore) {
@@ -84,6 +85,12 @@ func MSET(t *testing.T, store StringStore) {
 	store.MultiSet(map[string]string{"key1": "Hello", "key2": "World"})
 	assert.Equal(t, "Hello", store.Get("key1"))
 	assert.Equal(t, "World", store.Get("key2"))
+}
+
+func MSETNX(t *testing.T, store StringStore) {
+	assert.True(t, store.MultiSetIfNotExists(map[string]string{"key1": "Hello", "key2": "there"}))
+	assert.False(t, store.MultiSetIfNotExists(map[string]string{"key2": "there", "key3": "world"}))
+	assert.Equal(t, map[string]string{"key1": "Hello", "key2": "there"}, store.MultiGet([]string{"key1", "key2", "key3"}))
 }
 
 func SET(t *testing.T, store StringStore) {

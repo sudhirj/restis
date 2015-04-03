@@ -81,6 +81,16 @@ func (s *MemoryStore) MultiSet(data map[string]string) {
 	}
 }
 
+func (s *MemoryStore) MultiSetIfNotExists(data map[string]string) bool {
+	for k, _ := range data {
+		if s.Exists(k) {
+			return false
+		}
+	}
+	s.MultiSet(data)
+	return true
+}
+
 func (s *MemoryStore) Increment(key string) int64 {
 	return s.transformNumber(key, func(n int64) int64 { return n + 1 })
 }
