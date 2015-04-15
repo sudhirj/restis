@@ -15,6 +15,7 @@ type StringStore interface {
 	Decrement(key string) int64
 	IncrementBy(key string, delta int64) int64
 	DecrementBy(key string, delta int64) int64
+	SetRange(key string, offset int64, value string) int64
 	Exists(key string) bool
 	Length(key string) int64
 }

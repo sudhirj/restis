@@ -25,6 +25,12 @@ func (s *MemoryStore) GetRange(key string, start, stop int64) string {
 	return s.strings[key][start:stop]
 }
 
+func (s *MemoryStore) SetRange(key string, offset int64, value string) int64 {
+	valueLength := int64(len(value))
+	s.strings[key] = s.strings[key][:offset] + value + s.strings[key][offset+valueLength:]
+	return s.Length(key)
+}
+
 func (s *MemoryStore) GetSet(key, value string) string {
 	v := s.Get(key)
 	s.Set(key, value)

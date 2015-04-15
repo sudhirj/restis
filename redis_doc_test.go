@@ -22,6 +22,7 @@ func RunAllRedisDocChecksOnStore(t *testing.T, storeGen storeGenerator) {
 	SETNX(t, storeGen())
 	SETRANGE(t, storeGen())
 	STRLEN(t, storeGen())
+
 }
 
 func APPEND(t *testing.T, store StringStore) {
@@ -108,6 +109,9 @@ func SETNX(t *testing.T, store StringStore) {
 }
 
 func SETRANGE(t *testing.T, store StringStore) {
+	store.Set("key1", "Hello World")
+	assert.Equal(t, 11, store.SetRange("key1", 6, "Redis"))
+	assert.Equal(t, "Hello Redis", store.Get("key1"))
 }
 
 func STRLEN(t *testing.T, store StringStore) {
