@@ -2,6 +2,7 @@ package restis
 
 import (
 	"strconv"
+	"strings"
 )
 
 type MemoryStore struct {
@@ -27,6 +28,10 @@ func (s *MemoryStore) GetRange(key string, start, stop int64) string {
 
 func (s *MemoryStore) SetRange(key string, offset int64, value string) int64 {
 	valueLength := int64(len(value))
+	originalLength := int64(len(s.strings[key]))
+	if originalLength < offset+valueLength {
+		s.strings[key] = s.strings[key] + strings.Repeat(" ", int(offset+valueLength-originalLength))
+	}
 	s.strings[key] = s.strings[key][:offset] + value + s.strings[key][offset+valueLength:]
 	return s.Length(key)
 }

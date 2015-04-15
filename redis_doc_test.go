@@ -112,6 +112,9 @@ func SETRANGE(t *testing.T, store StringStore) {
 	store.Set("key1", "Hello World")
 	assert.Equal(t, 11, store.SetRange("key1", 6, "Redis"))
 	assert.Equal(t, "Hello Redis", store.Get("key1"))
+
+	assert.Equal(t, 11, store.SetRange("key2", 6, "Redis"))
+	assert.Equal(t, "      Redis", store.Get("key2"))
 }
 
 func STRLEN(t *testing.T, store StringStore) {
